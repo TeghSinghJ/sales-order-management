@@ -1,3 +1,4 @@
+// Dashboard.js
 import React, { useState, useEffect } from "react";
 import {
   Box,
@@ -7,8 +8,6 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Stack,
-  Heading,
   Flex,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
@@ -29,6 +28,20 @@ function Dashboard() {
     setCompletedOrders([...sampleCompletedOrders]);
   }, []);
 
+  const handleAddOrder = (newOrder) => {
+    setActiveOrders((prevOrders) => [...prevOrders, newOrder]);
+    setIsModalOpen(false);
+  };
+
+  const handleEditOrder = (editedOrder) => {
+    setActiveOrders((prevOrders) =>
+      prevOrders.map((order) =>
+        order.id === editedOrder.id ? editedOrder : order
+      )
+    );
+    setIsModalOpen(false);
+  };
+
   const handleModalOpen = (order = null) => {
     setIsEdit(!!order);
     setCurrentOrder(order);
@@ -40,26 +53,8 @@ function Dashboard() {
     setCurrentOrder(null);
   };
 
-  const handleSaveOrder = (newOrder) => {
-    if (isEdit) {
-      setActiveOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.id === newOrder.id ? newOrder : order
-        )
-      );
-    } else {
-      setActiveOrders((prevOrders) => [...prevOrders, newOrder]);
-    }
-    setIsModalOpen(false);
-  };
-
-
   return (
     <Box p={4}>
-      {/* <Stack direction="row" align="center" justify="space-between" mb={4}>
-        <Heading>Sale Order Management</Heading>
-        <ThemeToggle />
-      </Stack> */}
       <Tabs>
         <Flex justify="space-between" align="center" mb={4}>
           <TabList>
@@ -76,12 +71,16 @@ function Dashboard() {
         </Flex>
         <TabPanels>
           <TabPanel>
-            <OrderTable orders={activeOrders} onEdit={handleModalOpen} />
+            <OrderTable
+              orders={activeOrders}
+              onEdit={handleModalOpen}
+              onSave={handleEditOrder}
+            />
           </TabPanel>
           <TabPanel>
             <OrderTable
               orders={completedOrders}
-              setActiveOrders={setActiveOrders}
+              setActiveOrders={setActiveOrders} // Pass setActiveOrders here
               onEdit={handleModalOpen}
               isReadOnly
             />
@@ -92,7 +91,7 @@ function Dashboard() {
       <OrderModal
         isOpen={isModalOpen}
         onClose={handleModalClose}
-        onSave={handleSaveOrder}
+        onSave={isEdit ? handleEditOrder : handleAddOrder}
         order={currentOrder}
         isEdit={isEdit}
         productSchemes={productSchemes}
@@ -100,6 +99,7 @@ function Dashboard() {
     </Box>
   );
 }
+
 
 // Sample Data for Active and Completed Orders
 const sampleActiveOrders = [

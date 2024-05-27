@@ -1,4 +1,3 @@
-// OrderTable.js
 import React, { useState } from "react";
 import {
   Table,
@@ -12,18 +11,16 @@ import {
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import EditModal from "./EditModal";
 
-const OrderTable = ({ orders,setActiveOrders, onEdit, isReadOnly }) => {
+const OrderTable = ({ orders, setActiveOrders, onSave, isReadOnly }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleEdit = (order) => {
-    setSelectedOrder(order);
-    setIsModalOpen(true);
-  };
-
-  const handleSave = (formData) => {
-    console.log("Updated order data:", formData);
-    setActiveOrders([...orders, formData]); 
+  const handleEditOrder = (editedOrder) => {
+    setActiveOrders((prevOrders) =>
+      prevOrders.map((order) =>
+        order.id === editedOrder.id ? editedOrder : order
+      )
+    );
     setIsModalOpen(false);
   };
 
@@ -42,15 +39,17 @@ const OrderTable = ({ orders,setActiveOrders, onEdit, isReadOnly }) => {
         <Tbody>
           {orders.map((order) => (
             <Tr key={order.id}>
-              {console.log(order)}
               <Td>{order.id}</Td>
               <Td>{order.customer_name}</Td>
               <Td>{order.price}</Td>
-              <Td>{order.last_modified||order.invoice_date}</Td>
+              <Td>{order.last_modified || order.invoice_date}</Td>
               <Td>
                 <IconButton
-                  icon={<BiDotsHorizontalRounded />} // Render three dots icon
-                  onClick={() => handleEdit(order)} // Trigger edit modal
+                  icon={<BiDotsHorizontalRounded />}
+                  onClick={() => {
+                    setSelectedOrder(order);
+                    setIsModalOpen(true);
+                  }}
                   isDisabled={isReadOnly}
                 />
               </Td>
@@ -62,8 +61,9 @@ const OrderTable = ({ orders,setActiveOrders, onEdit, isReadOnly }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         order={selectedOrder}
-        onSave={handleSave}
-      />
+        setActiveOrders={setActiveOrders}
+        onSave={onSave} // Make sure to pass the correct function here
+        />
     </>
   );
 };

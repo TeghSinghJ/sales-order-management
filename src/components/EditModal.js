@@ -1,5 +1,4 @@
-// EditModal.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -15,14 +14,22 @@ import {
 } from "@chakra-ui/react";
 
 const EditModal = ({ isOpen, onClose, order, onSave }) => {
-
   const [formData, setFormData] = useState({
-    id: order?.id || "", // Add null check here
+    id: order?.id || "",
     customer_name: order?.customer_name || "",
-    amount: order?.amount || "",
+    price: order?.price || "",
     invoice_date: order?.invoice_date || "",
   });
-  console.log(order);
+
+  useEffect(() => {
+    setFormData({
+      id: order?.id || "",
+      customer_name: order?.customer_name || "",
+      price: order?.price || "",
+      invoice_date: order?.invoice_date || "",
+    });
+  }, [order]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -37,7 +44,7 @@ const EditModal = ({ isOpen, onClose, order, onSave }) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Edit Order ID: {formData.id}</ModalHeader> {/* Display order ID */}
+        <ModalHeader>Edit Order ID: {formData.id}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl>
@@ -49,10 +56,10 @@ const EditModal = ({ isOpen, onClose, order, onSave }) => {
             />
           </FormControl>
           <FormControl mt={4}>
-            <FormLabel>Amount</FormLabel>
+            <FormLabel>Price</FormLabel>
             <Input
-              name="amount"
-              value={formData.amount}
+              name="price"
+              value={formData.price}
               onChange={handleChange}
             />
           </FormControl>
@@ -66,7 +73,6 @@ const EditModal = ({ isOpen, onClose, order, onSave }) => {
             />
           </FormControl>
         </ModalBody>
-
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={handleSave}>
             Save
