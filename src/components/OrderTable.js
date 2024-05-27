@@ -62,7 +62,7 @@ const OrderTable = ({ orders, setActiveOrders, onSave, isReadOnly }) => {
         onClose={() => setIsModalOpen(false)}
         order={selectedOrder}
         setActiveOrders={setActiveOrders}
-        onSave={onSave} // Make sure to pass the correct function here
+        onSave={onSave} 
         />
     </>
   );

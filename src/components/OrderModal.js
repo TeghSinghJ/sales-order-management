@@ -118,8 +118,19 @@ const OrderModal = ({ productSchemes, isOpen, onClose, onSave, order, isEdit }) 
   const handleSave = () => {
     if (validateForm()) {
       onSave(formData);
+      setFormData({
+        id: null,
+        customer_name: "",
+        items: [],
+        paid: false,
+        invoice_no: "",
+        invoice_date: "",
+        price: 0,
+        last_modified: new Date().toISOString().split('T')[0],
+      });
     }
   };
+
 
   const productOptions = productSchemes.map((product) => ({
     value: product.id,

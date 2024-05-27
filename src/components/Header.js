@@ -6,8 +6,14 @@ const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <Flex justify="space-between" align="center" p={4} bg="gray.100">
-      <Text fontSize="xl">Sale Order Management</Text>
+    <Flex
+      justify="space-between"
+      align="center"
+      p={4}
+      bg={colorMode === 'dark' ? 'gray.800' : 'gray.100'} // Set background color based on color mode
+      color={colorMode === 'dark' ? 'white' : 'black'} // Set text color based on color mode
+    >
+      <Text fontSize="xl">Product Sales Order Management</Text>
       <IconButton
         aria-label="Toggle Dark Mode"
         icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
