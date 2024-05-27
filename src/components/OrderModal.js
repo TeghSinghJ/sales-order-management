@@ -12,109 +12,68 @@ import {
   Input,
   Button,
   Box,
-  Tag,
-  TagLabel,
-  TagCloseButton,
-  Select,
   Flex,
   Heading,
-  Text,
   Badge,
+  Icon,
 } from "@chakra-ui/react";
+import Select from "react-select";
+import { FaRupeeSign } from "react-icons/fa";
 
-const OrderModal = ({ isOpen, onClose, onSave, order, isEdit }) => {
+const OrderModal = ({ productSchemes, isOpen, onClose, onSave, order, isEdit }) => {
   const initialRef = React.useRef();
   const [formData, setFormData] = useState({
-    customer_id: "",
+    id: null,
+    customer_name: "",
     items: [],
     paid: false,
     invoice_no: "",
     invoice_date: "",
+    price: 0,
+    last_modified: new Date().toISOString().split('T')[0],
   });
-
-  const productSchemes = [
-    {
-      id: 209,
-      display_id: 8,
-      owner: 1079,
-      name: "New Product",
-      category: "The god of War",
-      characteristics: "New Product Characteristics",
-      features: "",
-      brand: "New Product Brand",
-      sku: [
-        {
-          id: 248,
-          selling_price: 54,
-          max_retail_price: 44,
-          amount: 33,
-          unit: "kg",
-          quantity_in_inventory: 0,
-          product: 209,
-        },
-        {
-          id: 247,
-          selling_price: 32,
-          max_retail_price: 32,
-          amount: 33,
-          unit: "kg",
-          quantity_in_inventory: 0,
-          product: 209,
-        },
-        {
-          id: 246,
-          selling_price: 23,
-          max_retail_price: 21,
-          amount: 22,
-          unit: "kg",
-          quantity_in_inventory: 1,
-          product: 209,
-        },
-      ],
-      updated_on: "2024-05-24T12:46:41.995873Z",
-      adding_date: "2024-05-24T12:46:41.995828Z",
-    },
-  ];
-
-  const getProductById = (id) => {
-    return productSchemes.find((product) => product.id === id);
-  };
+  const [formErrors, setFormErrors] = useState({});
 
   useEffect(() => {
     if (order) {
       setFormData(order);
     } else {
       setFormData({
-        customer_id: "",
+        id: null,
+        customer_name: "",
         items: [],
         paid: false,
         invoice_no: "",
         invoice_date: "",
+        price: 0,
+        last_modified: new Date().toISOString().split('T')[0],
       });
     }
   }, [order]);
+
+  const getProductById = (id) => {
+    return productSchemes.find((product) => product.id === id);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleProductSelect = (e) => {
-    const selectedId = parseInt(e.target.value);
-    const selectedProduct = getProductById(selectedId);
-    if (
-      selectedProduct &&
-      !formData.items.some((item) => item.sku_id === selectedId)
-    ) {
-      const newItem = {
-        sku_id: selectedProduct.id,
-        name: selectedProduct.name,
-        price: selectedProduct.selling_price,
+  const handleProductSelect = (selectedOptions) => {
+    const selectedIds = selectedOptions.map((option) => option.value);
+    const selectedItems = selectedIds.flatMap((id) => {
+      const product = getProductById(id);
+      return product.sku.map((sku) => ({
+        sku_id: sku.id,
+        name: product.name,
+        price: sku.selling_price,
+        unit: sku.unit,
         quantity: "",
-        remaining: selectedProduct.quantity_in_inventory,
-      };
-      setFormData({ ...formData, items: [...formData.items, newItem] });
-    }
+        remaining: sku.quantity_in_inventory,
+      }));
+    });
+    setFormData({ ...formData, items: selectedItems });
   };
 
   const handleRemoveProduct = (sku_id) => {
@@ -127,34 +86,97 @@ const OrderModal = ({ isOpen, onClose, onSave, order, isEdit }) => {
   const handleItemChange = (index, e) => {
     const { name, value } = e.target;
     const items = [...formData.items];
-    items[index] = { ...items[index], [name]: value };
-    setFormData({ ...formData, items });
+    const quantity = parseInt(value, 10);
+
+    if (name === "quantity") {
+      const remaining = items[index].remaining - quantity;
+      items[index] = {
+        ...items[index],
+        quantity: value,
+        remaining: remaining < 0 ? 0 : remaining,
+      };
+    } else {
+      items[index] = { ...items[index], [name]: value };
+    }
+
+    const totalPrice = items.reduce((total, item) => total + (item.price * (parseInt(item.quantity, 10) || 0)), 0);
+    setFormData({ ...formData, items, price: totalPrice });
+  };
+
+  const validateForm = () => {
+    let errors = {};
+    if (!formData.customer_name.trim()) {
+      errors.customer_name = "Customer Name is required";
+    }
+    if (formData.items.length === 0) {
+      errors.items = "At least one product must be selected";
+    }
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSave = () => {
-    onSave(formData);
+    if (validateForm()) {
+      onSave(formData);
+    }
   };
+
+  const productOptions = productSchemes.map((product) => ({
+    value: product.id,
+    label: product.name,
+  }));
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{isEdit ? "Edit" : "Create"} Sale Order</ModalHeader>
+        <ModalHeader>All Products</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
-          
-          <FormControl mt={4} isRequired>
-            <FormLabel>
-              Products <span style={{ color: "red" }}>*</span>
-            </FormLabel>
-            <Select placeholder="Select product" onChange={handleProductSelect}>
-              {productSchemes.map((product) => (
-                <option key={product.id} value={product.id}>
-                  {product.name}
-                </option>
-              ))}
-            </Select>
+          {/* {formData.id && ( */}
+            <FormControl>
+              <FormLabel>Order ID</FormLabel>
+              <Input
+                name="id"
+                onChange={handleChange}
+                value={formData.id}
+                placeholder="Order ID"
+              />
+            </FormControl>
+          {/* )} */}
+          <FormControl isRequired mt={4}>
+            <FormLabel>Customer Name</FormLabel>
+            <Input
+              name="customer_name"
+              value={formData.customer_name}
+              onChange={handleChange}
+              placeholder="Customer Name"
+            />
+            {formErrors.customer_name && (
+              <Box color="red.500">{formErrors.customer_name}</Box>
+            )}
           </FormControl>
+          <FormControl mt={4}>
+            <FormLabel>Invoice Date</FormLabel>
+            <Input
+              type="date"
+              name="invoice_date"
+              value={formData.invoice_date}
+              onChange={handleChange}
+            />
+          </FormControl>
+          <FormControl mt={4}>
+            <FormLabel>Products</FormLabel>
+            <Select
+              isMulti
+              options={productOptions}
+              onChange={handleProductSelect}
+              placeholder="Select product"
+            />
+          </FormControl>
+          {formErrors.items && (
+            <Box color="red.500">{formErrors.items}</Box>
+          )}
           <Box mt={4}>
             {formData.items.map((item, index) => (
               <Box
@@ -166,41 +188,37 @@ const OrderModal = ({ isOpen, onClose, onSave, order, isEdit }) => {
                 mb={4}
               >
                 <Flex justify="space-between" align="center">
-                  <Heading size="md">{item.name}</Heading>
-                  <Button
-                    size="sm"
-                    colorScheme="gray"
-                  >
-                    Rate:{item.amount}
+                  <Heading size="sm">
+                    {index + 1}. SKU {item.sku_id} ({item.unit})
+                  </Heading>
+                  <Button size="sm" colorScheme="gray">
+                    Rate:
+                    <Icon as={FaRupeeSign} /> {item.price}
                   </Button>
                 </Flex>
-                <Text mt={2}>Remaining: {item.remaining}</Text>
                 <Flex mt={2} justify="space-between" align="center">
-                  <FormControl isRequired>
-                    <FormLabel>
-                      Selling Price <span style={{ color: "red" }}>*</span>
-                    </FormLabel>
+                  <FormControl>
+                    <FormLabel>Selling Price</FormLabel>
                     <Input
                       name="price"
                       placeholder="Selling Price"
                       value={item.price}
-                      onChange={(e) => handleItemChange(index, e)}
+                      readOnly
                     />
                   </FormControl>
-                  <FormControl isRequired ml={4}>
-                    <FormLabel>
-                      Total Items <span style={{ color: "red" }}>*</span>
-                    </FormLabel>
+                  <FormControl ml={4}>
+                    <FormLabel>Total Items</FormLabel>
                     <Input
                       name="quantity"
                       placeholder="Total Items"
                       value={item.quantity}
                       onChange={(e) => handleItemChange(index, e)}
+                      isDisabled={item.remaining === 0}
                     />
                   </FormControl>
                 </Flex>
                 <Box mt={4}>
-                  <Badge colorScheme="green">
+                  <Badge colorScheme={item.remaining === 0 ? "red" : "green"}>
                     {item.remaining} Item(s) remaining
                   </Badge>
                 </Box>
