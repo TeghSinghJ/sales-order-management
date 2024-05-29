@@ -7,9 +7,13 @@ import {
   Th,
   Td,
   IconButton,
+  Avatar,
+  HStack,
+  Icon,
 } from "@chakra-ui/react";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import EditModal from "./EditModal";
+import { FaRupeeSign } from "react-icons/fa";
 
 const OrderTable = ({ orders, setActiveOrders, onSave, isReadOnly }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -24,6 +28,22 @@ const OrderTable = ({ orders, setActiveOrders, onSave, isReadOnly }) => {
     setIsModalOpen(false);
   };
 
+  const formatDate = (timestamp) => {
+    // Create a Date object from the timestamp
+    const dateObject = new Date(timestamp);
+  
+    // Extract date and time components separately
+    const date = dateObject.toLocaleDateString('en-US'); // Format the date only
+    const time = dateObject.toLocaleTimeString('en-US', { // Format the time only
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  
+    // Combine date and time with a space (no "at")
+    return `${date} ${time}`;
+  };
+  
+
   return (
     <>
       <Table variant="simple">
@@ -32,7 +52,7 @@ const OrderTable = ({ orders, setActiveOrders, onSave, isReadOnly }) => {
             <Th>ID</Th>
             <Th>Customer Name</Th>
             <Th>Price</Th>
-            <Th>Last Modified</Th>
+            <Th>Last Modified (Date & Time)</Th>
             <Th>Actions</Th>
           </Tr>
         </Thead>
@@ -40,9 +60,20 @@ const OrderTable = ({ orders, setActiveOrders, onSave, isReadOnly }) => {
           {orders.map((order) => (
             <Tr key={order.id}>
               <Td>{order.id}</Td>
-              <Td>{order.customer_name}</Td>
-              <Td>{order.price}</Td>
-              <Td>{order.last_modified || order.invoice_date}</Td>
+              <Td>
+                <HStack spacing="3">
+                  <Avatar name={order.customer_name} src={order.profile_url} />
+                  <span>{order.customer_name}</span>
+                </HStack>
+              </Td>
+              <Td>
+                <HStack spacing="2">
+                  <Icon as={FaRupeeSign} />
+                  <span>{order.price}</span>
+                </HStack>
+              </Td>
+              {/* Display formatted date and time */}
+              <Td>{formatDate(order.last_modified)}</Td>
               <Td>
                 <IconButton
                   icon={<BiDotsHorizontalRounded />}
@@ -62,8 +93,8 @@ const OrderTable = ({ orders, setActiveOrders, onSave, isReadOnly }) => {
         onClose={() => setIsModalOpen(false)}
         order={selectedOrder}
         setActiveOrders={setActiveOrders}
-        onSave={onSave} 
-        />
+        onSave={onSave}
+      />
     </>
   );
 };

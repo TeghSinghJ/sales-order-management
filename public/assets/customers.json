@@ -1,0 +1,93 @@
+[
+    {
+      "id": 9,
+      "customer": 11908,
+      "customer_profile": {
+        "id": 11908,
+        "name": "Ram",
+        "color": [182, 73, 99],
+        "email": "jesus_christ@church.com",
+        "pincode": "Mumbai",
+        "location_name": "Mumbai, Maharashtra, India",
+        "type": "C",
+        "profile_pic": null,
+        "gst": ""
+      }
+    },
+    {
+      "id": 10,
+      "customer": 11909,
+      "customer_profile": {
+        "id": 11909,
+        "name": "Sita",
+        "color": [34, 139, 34],
+        "email": "sita_rama@temple.com",
+        "pincode": "Delhi",
+        "location_name": "Delhi, Delhi, India",
+        "type": "C",
+        "profile_pic": null,
+        "gst": ""
+      }
+    },
+    {
+      "id": 11,
+      "customer": 11910,
+      "customer_profile": {
+        "id": 11910,
+        "name": "Lakshman",
+        "color": [255, 165, 0],
+        "email": "lakshman_sita@temple.com",
+        "pincode": "Chennai",
+        "location_name": "Chennai, Tamil Nadu, India",
+        "type": "C",
+        "profile_pic": null,
+        "gst": ""
+      }
+    },
+    {
+      "id": 12,
+      "customer": 11911,
+      "customer_profile": {
+        "id": 11911,
+        "name": "Bharat",
+        "color": [70, 130, 180],
+        "email": "bharat_ram@temple.com",
+        "pincode": "Kolkata",
+        "location_name": "Kolkata, West Bengal, India",
+        "type": "C",
+        "profile_pic": null,
+        "gst": ""
+      }
+    },
+    {
+      "id": 13,
+      "customer": 11912,
+      "customer_profile": {
+        "id": 11912,
+        "name": "Shatrughna",
+        "color": [220, 20, 60],
+        "email": "shatrughna_ram@temple.com",
+        "pincode": "Hyderabad",
+        "location_name": "Hyderabad, Telangana, India",
+        "type": "C",
+        "profile_pic": null,
+        "gst": ""
+      }
+    },
+    {
+      "id": 14,
+      "customer": 11913,
+      "customer_profile": {
+        "id": 11913,
+        "name": "Hanuman",
+        "color": [255, 99, 71],
+        "email": "hanuman_bhakt@temple.com",
+        "pincode": "Bangalore",
+        "location_name": "Bangalore, Karnataka, India",
+        "type": "C",
+        "profile_pic": null,
+        "gst": ""
+      }
+    }
+  ]
+  

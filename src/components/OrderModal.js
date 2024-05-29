@@ -33,6 +33,7 @@ const OrderModal = ({ productSchemes, isOpen, onClose, onSave, order, isEdit }) 
     last_modified: new Date().toISOString().split('T')[0],
   });
   const [formErrors, setFormErrors] = useState({});
+  const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
     if (order) {
@@ -51,6 +52,14 @@ const OrderModal = ({ productSchemes, isOpen, onClose, onSave, order, isEdit }) 
     }
   }, [order]);
 
+  useEffect(() => {
+    // Fetch customers from the JSON file
+    fetch('assets/customers.json')
+      .then(response => response.json())
+      .then(data => setCustomers(data))
+      .catch(error => console.error('Error fetching customers:', error));
+  }, []);
+
   const getProductById = (id) => {
     return productSchemes.find((product) => product.id === id);
   };
@@ -64,17 +73,25 @@ const OrderModal = ({ productSchemes, isOpen, onClose, onSave, order, isEdit }) 
     const selectedIds = selectedOptions.map((option) => option.value);
     const selectedItems = selectedIds.flatMap((id) => {
       const product = getProductById(id);
-      return product.sku.map((sku) => ({
-        sku_id: sku.id,
-        name: product.name,
-        price: sku.selling_price,
-        unit: sku.unit,
-        quantity: "",
-        remaining: sku.quantity_in_inventory,
-      }));
+      if (product && product.sku) {
+        return product.sku.map((sku) => ({
+          sku_id: sku.id,
+          name: product.name,
+          price: sku.selling_price,
+          unit: sku.unit,
+          quantity: "",
+          remaining: sku.quantity_in_inventory,
+        }));
+      }
+      return [];
     });
-    setFormData({ ...formData, items: selectedItems });
+    // Merge the new selected items with the existing ones
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      items: [...prevFormData.items, ...selectedItems],
+    }));
   };
+  
 
   const handleRemoveProduct = (sku_id) => {
     setFormData({
@@ -131,6 +148,10 @@ const OrderModal = ({ productSchemes, isOpen, onClose, onSave, order, isEdit }) 
     }
   };
 
+  const customerOptions = customers.map((customer) => ({
+    value: customer.id,
+    label: customer.customer_profile.name,
+  }));
 
   const productOptions = productSchemes.map((product) => ({
     value: product.id,
@@ -141,27 +162,24 @@ const OrderModal = ({ productSchemes, isOpen, onClose, onSave, order, isEdit }) 
     <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>All Products</ModalHeader>
+        <ModalHeader>Order Sales</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>
-          {/* {formData.id && ( */}
-            <FormControl>
-              <FormLabel>Order ID</FormLabel>
-              <Input
-                name="id"
-                onChange={handleChange}
-                value={formData.id}
-                placeholder="Order ID"
-              />
-            </FormControl>
-          {/* )} */}
+          <FormControl>
+            <FormLabel>Order ID</FormLabel>
+            <Input
+              name="id"
+              onChange={handleChange}
+              value={formData.id}
+              placeholder="Order ID"
+            />
+          </FormControl>
           <FormControl isRequired mt={4}>
             <FormLabel>Customer Name</FormLabel>
-            <Input
-              name="customer_name"
-              value={formData.customer_name}
-              onChange={handleChange}
-              placeholder="Customer Name"
+            <Select
+              options={customerOptions}
+              onChange={(selectedOption) => setFormData({ ...formData, customer_name: selectedOption ? selectedOption.label : "" })}
+              placeholder="Select customer"
             />
             {formErrors.customer_name && (
               <Box color="red.500">{formErrors.customer_name}</Box>
@@ -177,7 +195,7 @@ const OrderModal = ({ productSchemes, isOpen, onClose, onSave, order, isEdit }) 
             />
           </FormControl>
           <FormControl mt={4}>
-            <FormLabel>Products</FormLabel>
+            <FormLabel>All Products</FormLabel>
             <Select
               isMulti
               options={productOptions}
@@ -233,6 +251,14 @@ const OrderModal = ({ productSchemes, isOpen, onClose, onSave, order, isEdit }) 
                     {item.remaining} Item(s) remaining
                   </Badge>
                 </Box>
+                {/* <Button
+                  size="sm"
+                  colorScheme="red"
+                  mt={2}
+                  onClick={() => handleRemoveProduct(item.sku_id)}
+                >
+                  Remove
+                </Button> */}
               </Box>
             ))}
           </Box>
