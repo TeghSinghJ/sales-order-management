@@ -1,71 +1,60 @@
-## Deployment link : https://frolicking-unicorn-7a2b95.netlify.app/
-# Getting Started with Create React App
+# Product Sales Order Management
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Product Sales Management is a web application developed using React.js and Chakra UI, designed to streamline sales management processes with intuitive user interfaces and essential features.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **User Authentication**: Secure authentication system allowing authorized access to the application.
+- **Day and Night Mode**: Toggle between light and dark themes for comfortable viewing in any environment.
+- **Multiple Selection Option Dropdown**: Enhanced user experience with dropdowns supporting multiple selections.
+- **Product Management**: Efficiently manage product listings, updates, and inventory.
+- **Sales Tracking**: Monitor sales performance and generate reports for analysis.
+- **Responsive Design**: Ensures usability across various devices and screen sizes.
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **React.js**: Frontend library for building user interfaces.
+- **Chakra UI**: Component library for React with a focus on accessibility and developer experience.
+- **Firebase**: Backend-as-a-Service (BaaS) used for user authentication and database functionalities.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Deployment
 
-### `npm test`
+The application is deployed and can be accessed via the following link:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+[Product Sales Management Demo](https://frolicking-unicorn-7a2b95.netlify.app/)
 
-### `npm run build`
+### Demo Credentials
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- **Username**: `demo`
+- **Password**: `demo`
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Usage
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **Authentication**: Sign up and log in with valid credentials.
+- **Navigation**: Use the sidebar to navigate between different sections of the application.
+- **Settings**: Adjust theme preferences and other settings via the user interface.
 
-### `npm run eject`
+## Contributing
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Contributions are welcome! Here's how you can contribute to this project:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Fork the project.
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a pull request.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## License
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Learn More
+## Acknowledgements
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- **Chakra UI**: Thank you to the Chakra UI team for their excellent component library.
+- **Firebase**: Firebase authentication and database functionalities.
+- **React.js**: React library for building user interfaces efficiently.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Contact
 
-### Code Splitting
+For any inquiries or feedback, please contact us at [teghsingh2@gmail.com](mailto:teghsingh2@gmail.com).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
